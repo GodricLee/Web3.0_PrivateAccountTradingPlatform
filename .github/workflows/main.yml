@@ -37,7 +37,7 @@ jobs:
       - name: Install packages
         run: yarn install --frozen-lockfile
       - name: ESLint
-        run: yarn lint:ci
+        run: yarn lint
         continue-on-error: true
       - name: Annotate Code Linting Results
         uses: ataylorme/eslint-annotate-action@1.2.0
