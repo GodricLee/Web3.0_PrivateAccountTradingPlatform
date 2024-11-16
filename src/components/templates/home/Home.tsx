@@ -25,7 +25,7 @@ const Home = () => {
           Secure transactions for buyers and sellers, powered by blockchain technology.
         </Text>
         <Button colorScheme="teal" size="lg" width="full" onClick={handleGetStarted}>
-          Get Started
+          Get Started Now!
         </Button>
       </Box>
       <Heading size="md" marginBottom={6}>
