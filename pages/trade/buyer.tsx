@@ -3,7 +3,7 @@ import { NFTTransfers } from 'components/templates/transfers/NFT';
 
 const NFTTransfersPage = () => {
   return (
-    <Default pageName="NFT Transfers">
+    <Default pageName="Trade As Buyer">
       <NFTTransfers />
     </Default>
   );

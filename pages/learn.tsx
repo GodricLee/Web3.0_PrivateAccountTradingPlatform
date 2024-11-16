@@ -3,7 +3,7 @@ import { Transactions } from 'components/templates/transactions';
 
 const TransactionsPage = () => {
   return (
-    <Default pageName="Transactions">
+    <Default pageName="Learn About Us">
       <Transactions />
     </Default>
   );
