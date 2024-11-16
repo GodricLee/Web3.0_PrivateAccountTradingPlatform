@@ -3,7 +3,7 @@ import { ERC20Transfers } from 'components/templates/transfers/ERC20';
 
 const ERC20 = () => {
   return (
-    <Default pageName="ERC20 Transfers">
+    <Default pageName="Trade As Seller">
       <ERC20Transfers />
     </Default>
   );

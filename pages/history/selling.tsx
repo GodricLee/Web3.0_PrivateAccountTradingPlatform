@@ -3,7 +3,7 @@ import { ERC20Balances } from 'components/templates/balances/ERC20';
 
 const ERC20 = () => {
   return (
-    <Default pageName="ERC20 Balances">
+    <Default pageName="Selling History">
       <ERC20Balances />
     </Default>
   );

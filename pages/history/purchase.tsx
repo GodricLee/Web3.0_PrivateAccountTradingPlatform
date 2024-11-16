@@ -3,7 +3,7 @@ import { NFTBalances } from 'components/templates/balances/NFT';
 
 const NFT = () => {
   return (
-    <Default pageName="NFT Balances">
+    <Default pageName="Purchase History">
       <NFTBalances />
     </Default>
   );

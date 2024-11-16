@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { InjectedConnector } from 'wagmi/connectors/injected';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import { useAccount, useConnect, useDisconnect, useSignMessage } from 'wagmi';
@@ -21,7 +22,7 @@ const ConnectButton = () => {
     try {
       const { account, chain } = await connectAsync();
 
-      const challenge = await requestChallengeAsync({ address: account, chainId: chain.id });
+      const challenge = await requestChallengeAsync({ address: account, chainId: 1 });
 
       if (!challenge) {
         throw new Error('No challenge received');
