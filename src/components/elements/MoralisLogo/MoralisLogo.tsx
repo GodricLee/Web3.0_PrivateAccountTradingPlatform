@@ -9,7 +9,8 @@ const MoralisLogo = () => {
       src={colorMode === 'dark' ? '/Moralis-DarkBG.svg' : '/Moralis-LightBG.svg'}
       height={45}
       width={150}
-      //alt="Moralis" wqh,24.11.16 23:28
+      //wqh,24.11.16 23:28
+      //alt="Moralis" 
       alt="Tradeding Platform"
     />
   );
