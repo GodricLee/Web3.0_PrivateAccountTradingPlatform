@@ -1,10 +1,10 @@
 import { Default } from 'components/layouts/Default';
-import { NFTTransfers } from 'components/templates/transfers/NFT';
+import { TradeAsBuyer } from 'components/templates/transfers/TradeAsBuyer';
 
 const NFTTransfersPage = () => {
   return (
     <Default pageName="Trade As Buyer">
-      <NFTTransfers />
+      <TradeAsBuyer />
     </Default>
   );
 };
