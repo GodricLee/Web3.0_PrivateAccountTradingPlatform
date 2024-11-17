@@ -1,10 +1,10 @@
 import { Default } from 'components/layouts/Default';
-import { Transactions } from 'components/templates/transactions';
+import { LearnAboutUs } from 'components/templates/LearnAboutUs';
 
 const TransactionsPage = () => {
   return (
     <Default pageName="Learn About Us">
-      <Transactions />
+      <LearnAboutUs />
     </Default>
   );
 };
