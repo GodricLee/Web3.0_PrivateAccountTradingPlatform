@@ -17,7 +17,7 @@ import { useEffect } from 'react';
 import { getEllipsisTxt } from 'utils/format';
 import { useNetwork } from 'wagmi';
 
-const Transactions = () => {
+const LearnAboutUs = () => {
   const hoverTrColor = useColorModeValue('gray.100', 'gray.700');
   const { data } = useSession();
   const { chain } = useNetwork();
@@ -79,4 +79,4 @@ const Transactions = () => {
   );
 };
 
-export default Transactions;
+export default LearnAboutUs;
