@@ -3,5 +3,7 @@ module.exports = {
   ignorePatterns: ['**/build/**/*'],
   rules: {
     'no-console': 'off',
+    "@typescript-eslint/no-unused-vars": "off",
+    "no-inline-comments": "off",
   },
 };
