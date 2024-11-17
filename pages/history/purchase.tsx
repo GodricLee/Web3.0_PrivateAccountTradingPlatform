@@ -1,10 +1,10 @@
 import { Default } from 'components/layouts/Default';
-import { NFTBalances } from 'components/templates/balances/NFT';
+import { PurchaseRecords } from 'components/templates/TradingHistory/PurchaseRecords';
 
 const NFT = () => {
   return (
     <Default pageName="Purchase History">
-      <NFTBalances />
+      <PurchaseRecords />
     </Default>
   );
 };

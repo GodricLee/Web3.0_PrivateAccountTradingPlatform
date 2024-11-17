@@ -1,10 +1,10 @@
 import { Default } from 'components/layouts/Default';
-import { ERC20Balances } from 'components/templates/balances/ERC20';
+import { SellingRecords } from 'components/templates/TradingHistory/SellingRecords';
 
 const ERC20 = () => {
   return (
     <Default pageName="Selling History">
-      <ERC20Balances />
+      <SellingRecords />
     </Default>
   );
 };

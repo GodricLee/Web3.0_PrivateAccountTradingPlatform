@@ -1,5 +1,5 @@
 import { Default } from 'components/layouts/Default';
-import { TradeAsSeller } from 'components/templates/transfers/TradeAsSeller';
+import { TradeAsSeller } from 'components/templates/Trade/TradeAsSeller';
 
 const ERC20 = () => {
   return (

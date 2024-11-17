@@ -5,7 +5,7 @@ import { useSession } from 'next-auth/react';
 import { useEffect } from 'react';
 import { useNetwork } from 'wagmi';
 
-const NFTBalances = () => {
+const PurchaseRecords = () => {
   const { data } = useSession();
   const { chain } = useNetwork();
   const { data: nfts } = useEvmWalletNFTs({
@@ -33,4 +33,4 @@ const NFTBalances = () => {
   );
 };
 
-export default NFTBalances;
+export default PurchaseRecords;
