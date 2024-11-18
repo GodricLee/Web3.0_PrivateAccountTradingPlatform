@@ -7,10 +7,10 @@
     "format": "prettier . \"**/*.+(js|ts|json)\" --write --ignore-path .gitignore",
     "format:check": "prettier \"**/*.+(js|ts|json)\" --check --ignore-path .gitignore",
     "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
+    "build": "export NODE_OPTIONS='--max-old-space-size=2048' && next build",
+    "start": "export NODE_OPTIONS='--max-old-space-size=2048' && next start",
     "lint": "next lint",
-    "test:e2e": "start-server-and-test dev http://localhost:3000 test:cypress",
+    "test:e2e": "start-server-and-test dev http://81.70.13.43:3000 test:cypress",
     "test:cypress": "cypress run --browser chrome --headless"
   },
   "dependencies": {
