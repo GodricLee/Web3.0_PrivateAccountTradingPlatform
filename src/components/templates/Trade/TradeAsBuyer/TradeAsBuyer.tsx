@@ -10,20 +10,33 @@ import {
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import { useSession } from 'next-auth/react';
-import { useNetwork } from 'wagmi';
+import { useNetwork, useAccount } from 'wagmi';
 import Moralis from 'moralis';
 
 const TradeAsBuyer = () => {
   const hoverTrColor = useColorModeValue('gray.100', 'gray.700');
   const { data } = useSession();
   const { chain } = useNetwork();
+  // const { address, isConnected } = useAccount();
   const toast = useToast();
-
+  const address = data?.user?.address;
+  const isConnected = data?.user?.address && chain?.id;
   const [tradeAmount, setTradeAmount] = useState('');
   const [tradeKey, setTradeKey] = useState('');
   const [generatedKey, setGeneratedKey] = useState('');
 
   const handleGenerateKey = async () => {
+    if (!isConnected || !address) {
+      toast({
+        title: 'Wallet Not Connected',
+        description: 'Please connect your wallet before generating a trade key.',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
+
     if (!tradeAmount) {
       toast({
         title: 'Error',
@@ -35,9 +48,9 @@ const TradeAsBuyer = () => {
       return;
     }
 
-    // Simulating server-side key generation using amount and a seed
+    // Generate key based on wallet address, trade amount, and a seed
     const seed = Math.random().toString(36).substring(2);
-    const key = btoa(`${tradeAmount}:${seed}`);
+    const key = btoa(`${address}:${tradeAmount}:${seed}`);
     setGeneratedKey(key);
     toast({
       title: 'Trade Key Generated',
@@ -49,6 +62,17 @@ const TradeAsBuyer = () => {
   };
 
   const handleAcceptKey = async () => {
+    if (!isConnected || !address) {
+      toast({
+        title: 'Wallet Not Connected',
+        description: 'Please connect your wallet before confirming a trade key.',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
+
     if (!tradeKey) {
       toast({
         title: 'Error',
@@ -62,9 +86,13 @@ const TradeAsBuyer = () => {
 
     try {
       // Simulate server-side validation and response
-      const [amount, seed] = atob(tradeKey).split(':');
-      if (!amount || !seed) {
+      const [walletAddress, amount, seed] = atob(tradeKey).split(':');
+      if (!walletAddress || !amount || !seed) {
         throw new Error('Invalid key format');
+      }
+
+      if (walletAddress === address) {
+        throw new Error('You cannot trade with yourself');
       }
 
       // Display trade details
@@ -77,7 +105,6 @@ const TradeAsBuyer = () => {
       });
 
       // Logic for initiating a trade can be implemented here, using Moralis API if needed
-      // e.g., save transaction state on the blockchain
 
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';

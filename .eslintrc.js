@@ -5,5 +5,7 @@ module.exports = {
     'no-console': 'off',
     "@typescript-eslint/no-unused-vars": "off",
     "no-inline-comments": "off",
+    complexity: ["error", 12],
+    "etc/no-commented-out-code": "off",
   },
 };
