@@ -8,7 +8,7 @@ const Home = () => {
   const router = useRouter(); // 使用 Next.js 的 useRouter 进行导航
 
   const handleGetStarted = () => {
-    router.push('/trade/buyer'); // 导航到 /trade/buyer
+    router.push('/trade/initialize'); // 导航到 /trade/buyer
   };
 
   const handleLearnMore = () => {

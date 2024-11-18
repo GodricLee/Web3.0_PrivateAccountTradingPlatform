@@ -11,6 +11,12 @@ const NAV_LINKS: ISubNav[] = [
     href: '/trade',
     children: [
       {
+        label: 'Trade Initialize',
+        subLabel: 'Initialize or accept a trade, by generating or accepting a trade key',
+        href: '/trade/initialize',
+        logo: 'token',
+      },
+      {
         label: 'As Seller',
         subLabel: 'Sell any account you want, and make a guaranteed profit',
         href: '/trade/seller',
