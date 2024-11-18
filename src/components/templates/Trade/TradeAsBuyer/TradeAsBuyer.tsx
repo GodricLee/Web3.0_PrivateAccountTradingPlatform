@@ -7,6 +7,7 @@ import {
   Text,
   useColorModeValue,
   useToast,
+  Select,
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import { useSession } from 'next-auth/react';
@@ -24,6 +25,7 @@ const TradeAsBuyer = () => {
   const [tradeAmount, setTradeAmount] = useState('');
   const [tradeKey, setTradeKey] = useState('');
   const [generatedKey, setGeneratedKey] = useState('');
+  const [userRole, setUserRole] = useState(''); // Added state for user role
 
   const handleGenerateKey = async () => {
     if (!isConnected || !address) {
@@ -48,13 +50,24 @@ const TradeAsBuyer = () => {
       return;
     }
 
-    // Generate key based on wallet address, trade amount, and a seed
+    if (!userRole) {
+      toast({
+        title: 'Error',
+        description: 'Please select your role as Buyer or Seller.',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
+
+    // Generate key based on wallet address, trade amount, user role, and a seed
     const seed = Math.random().toString(36).substring(2);
-    const key = btoa(`${address}:${tradeAmount}:${seed}`);
+    const key = btoa(`${address}:${tradeAmount}:${userRole}:${seed}`);
     setGeneratedKey(key);
     toast({
       title: 'Trade Key Generated',
-      description: 'Copy and share this key with the seller.',
+      description: 'Copy and share this key with the counterpart.',
       status: 'success',
       duration: 5000,
       isClosable: true,
@@ -86,19 +99,26 @@ const TradeAsBuyer = () => {
 
     try {
       // Simulate server-side validation and response
-      const [walletAddress, amount, seed] = atob(tradeKey).split(':');
-      if (!walletAddress || !amount || !seed) {
+      const [walletAddress, amount, role, seed] = atob(tradeKey).split(':');
+      if (!walletAddress || !amount || !role || !seed) {
         throw new Error('Invalid key format');
       }
 
       if (walletAddress === address) {
         throw new Error('You cannot trade with yourself');
       }
-
+      const opposite_role = role === 'Buyer' ? 'Seller' : 'Buyer';
       // Display trade details
       toast({
         title: 'Trade Key Accepted',
-        description: `Trade amount: ${amount} ETH. Confirm to proceed.`,
+        description: (
+          <>
+            Trade amount: {amount} ETH as {opposite_role}.<br />
+            {role} address: {address}.<br />
+            {opposite_role} address: {walletAddress}.<br />
+            Confirm to proceed.
+          </>
+        ),
         status: 'info',
         duration: 5000,
         isClosable: true,
@@ -130,6 +150,10 @@ const TradeAsBuyer = () => {
           onChange={(e) => setTradeAmount(e.target.value)}
           mb={4}
         />
+        <Select placeholder="Select Role" onChange={(e) => setUserRole(e.target.value)} mb={4}>
+          <option value="Buyer">I'm a Buyer</option>
+          <option value="Seller">I'm a Seller</option>
+        </Select>
         <Button colorScheme="teal" onClick={handleGenerateKey} mb={4} w="full">
           Generate Trade Key
         </Button>
