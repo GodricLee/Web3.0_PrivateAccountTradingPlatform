@@ -14,6 +14,7 @@ import { useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useNetwork, useAccount } from 'wagmi';
 import Moralis from 'moralis';
+import { ethers } from 'ethers';
 
 const TradeInitialize = () => {
   const hoverTrColor = useColorModeValue('gray.100', 'gray.700');
@@ -117,11 +118,7 @@ const TradeInitialize = () => {
           <Text color="black">Your role: {role}</Text>
           <Text color="black">{role} address: {address}</Text>
           <Text color="black">{opposite_role} address: {walletAddress}</Text>
-          <Button colorScheme="green" onClick={() => {
-            // Placeholder for user action when they accept the trade
-            // Implement trade acceptance logic here
-            onClose();
-          }}>
+          <Button colorScheme="green" onClick={handleConfirmAndProceed}>
             Confirm Trade and Proceed
           </Button>
         </VStack>
@@ -145,6 +142,80 @@ const TradeInitialize = () => {
       });
     }
   };
+
+  const handleConfirmAndProceed = async () => {
+ 
+  try {
+    // Decode the trade key to get the other party's address and trade details
+    const [walletAddress, amount, role, seed] = atob(tradeKey).split(':');
+    if (!walletAddress || !amount || !role || !seed) {
+      throw new Error('Invalid trade key format');
+    }
+
+    // Prepare data for transaction
+    const tradeAmount_ = ethers.utils.parseUnits(amount, 'ether'); // Convert amount to Wei
+    const serviceFee = tradeAmount_.mul(1).div(100); // 这里其实应该从后端读取费用，这里应该实现接口。
+    const totalAmount = tradeAmount_.add(serviceFee); // Total amount including service fee
+
+
+    // Interact with the smart contract to initiate the trade
+    const contractAddress = '0xYourContractAddress'; // 这里要修改合约地址
+    const abi = [
+      // The relevant ABI for your smart contract
+      {
+        "inputs": [
+          { "internalType": "string", "name": "new_key", "type": "string" },
+          { "internalType": "address", "name": "buyer_address", "type": "address" },
+          { "internalType": "address", "name": "seller_address", "type": "address" },
+          { "internalType": "uint256", "name": "trade_amount", "type": "uint256" }
+        ],
+        "name": "createTrade",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      }
+    ];
+
+    if (!window.ethereum) {
+      throw new Error('Ethereum object not found, please install MetaMask.');
+    }
+
+    const provider = new ethers.providers.Web3Provider(window.ethereum as ethers.providers.ExternalProvider);
+    const signer = provider.getSigner();
+    const contract = new ethers.Contract(contractAddress, abi, signer);
+
+    const tx = await contract.createTrade(
+      tradeKey, // Trade key
+      address,   // Buyer address
+      walletAddress, // Seller address
+      totalAmount // Total amount including service fee
+    );
+
+    // Wait for the transaction to be mined
+    await tx.wait();
+
+    //Notify the user of successful trade creation
+    toast({
+      title: 'Trade Created',
+      description: 'The trade has been successfully created,please come to your role\'s page to proceed.',
+      status: 'success',
+      duration: 5000,
+      isClosable: true,
+    });
+
+  } catch (error) {
+    // Handle any errors that may occur during the process
+    toast({
+      title: 'Error',
+      description: (error as Error).message || 'An unexpected error occurred during the trade process.',
+      status: 'error',
+      duration: 3000,
+      isClosable: true,
+    });
+  }
+  
+  }
+
 
   return (
     <VStack w={'full'} align="center" spacing={6} padding={6}>
@@ -188,5 +259,6 @@ const TradeInitialize = () => {
     </VStack>
   );
 };
+
 
 export default TradeInitialize;
