@@ -1,11 +1,16 @@
 import { useState } from 'react';
 import { VStack, Heading, Input, Button, useToast } from '@chakra-ui/react';
-
+import { useRouter } from 'next/router';
+import { useSession } from 'next-auth/react';
 const FundUpload = () => {
   const [amount, setAmount] = useState('');
   const [loading, setLoading] = useState(false);
   const toast = useToast();
-
+  const router = useRouter();
+  const { tradeKey } = router.query; // 从 URL 查询参数中获取 tradeKey
+  const { data } = useSession();
+  const buyerAddress = data?.user?.address;
+  
   const handleUploadFund = async () => {
     if (!amount) {
       toast({
@@ -26,7 +31,7 @@ const FundUpload = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ amount }),
+        body: JSON.stringify({ tradeKey,amount,buyerAddress }),
       });
 
       if (!response.ok) {

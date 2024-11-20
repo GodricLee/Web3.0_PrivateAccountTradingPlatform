@@ -8,7 +8,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
   // const { data } = useSession();
   // const address = data?.user?.address;
-  const { tradeKey } = req.body;
+  const { tradeKey , userAddress } = req.body;
 
   if (!tradeKey) {
     return res.status(400).json({ error: 'Trade key is required.' });
@@ -27,8 +27,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       functionName: 'get_current_step',
       abi: process.env.CONTRACT_ABI ? JSON.parse(process.env.CONTRACT_ABI) : [],
       params: {
-        new_key: '114514',
-        requester_address: '0xeE7e2c107AbC589Da98f642829054928AeD9FEf5', // 替换为用户地址
+        //new_key: '114514',
+        //requester_address: '0xeE7e2c107AbC589Da98f642829054928AeD9FEf5', // 替换为用户地址
+        new_key: tradeKey,
+        requester_address: userAddress,
       },
     });
 

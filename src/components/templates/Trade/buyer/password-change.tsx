@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { VStack, Heading, Input, Button, useToast } from '@chakra-ui/react';
-
+import { useRouter } from 'next/router';
+import { useSession } from 'next-auth/react';
 const PasswordChange = () => {
   const [newPassword, setNewPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -17,7 +18,10 @@ const PasswordChange = () => {
       });
       return;
     }
-
+    const router = useRouter();
+    const { tradeKey } = router.query; // 从 URL 查询参数中获取 tradeKey
+    const { data } = useSession();
+    const buyerAddress = data?.user?.address;
     try {
       setLoading(true);
 
@@ -27,7 +31,7 @@ const PasswordChange = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ newPassword }),
+        body: JSON.stringify({ tradeKey,newPassword,buyerAddress }),
       });
 
       if (!response.ok) {

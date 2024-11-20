@@ -1,5 +1,12 @@
 import { VStack, Heading, Button, useToast } from '@chakra-ui/react';
 import { useState } from 'react';
+import { useRouter } from 'next/router';
+import { useSession } from 'next-auth/react';
+
+const router = useRouter();
+const { tradeKey } = router.query; // 从 URL 查询参数中获取 tradeKey
+const { data } = useSession();
+const sellerAddress = data?.user?.address;
 
 const WithdrawFunds = () => {
   const [loading, setLoading] = useState(false);
@@ -14,6 +21,7 @@ const WithdrawFunds = () => {
         headers: {
           'Content-Type': 'application/json',
         },
+        body: JSON.stringify({ tradeKey, sellerAddress }),
       });
 
       if (!response.ok) {

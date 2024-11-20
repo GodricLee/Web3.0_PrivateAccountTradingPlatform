@@ -9,13 +9,14 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
-
+import { useSession } from 'next-auth/react';
 const Buyer = () => {
   const [tradeKey, setTradeKey] = useState('');
   const [loading, setLoading] = useState(false);
   const toast = useToast();
   const router = useRouter();
-
+  const { data } = useSession();
+  const address = data?.user?.address;
   const handleSubmit = async () => {
     if (!tradeKey) {
       toast({
@@ -31,13 +32,14 @@ const Buyer = () => {
     try {
       setLoading(true);
 
+
       // 调用服务器 API 查询交易状态
       const response = await fetch('/api/getTradeStep', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ tradeKey }),
+        body: JSON.stringify({ tradeKey,address }),
       });
 
       if (!response.ok) {
@@ -50,19 +52,19 @@ const Buyer = () => {
       // 根据返回的 step 值进行页面跳转
       switch (stepInt) {
         case 0:
-          router.push('/buyer/fund-upload'); // 跳转到资金上传页面
+          router.push(`/buyer/fund-upload?tradeKey=${tradeKey}`); // 跳转到资金上传页面
           break;
         case 1:
-          router.push('/buyer/request-2fa'); // 跳转到 2FA 验证页面
+          router.push(`/buyer/request-2fa?tradeKey=${tradeKey}`); // 跳转到 2FA 验证页面
           break;
         case 2:
-          router.push('/buyer/confirm-trade'); // 跳转到交易确认页面
+          router.push(`/buyer/confirm-trade?tradeKey=${tradeKey}`); // 跳转到交易确认页面
           break;
         case 3:
-          router.push('/buyer/password-change'); // 跳转到密码修改页面
+          router.push(`/buyer/password-change?tradeKey=${tradeKey}`); // 跳转到密码修改页面
           break;
         case 4:
-          router.push('/buyer/trade-complete'); // 跳转到交易完成页面
+          router.push(`/buyer/trade-complete?tradeKey=${tradeKey}`); // 跳转到交易完成页面
           break;
         default:
           toast({

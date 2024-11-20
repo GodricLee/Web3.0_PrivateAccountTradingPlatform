@@ -1,7 +1,13 @@
 import { VStack, Heading, Button, useToast } from '@chakra-ui/react';
 import { useState } from 'react';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
+const { data } = useSession();
+const address = data?.user?.address;
 
 const ConfirmTrade = () => {
+  const router = useRouter();
+  const { tradeKey } = router.query; // 从 URL 查询参数中获取 tradeKey
   const [loading, setLoading] = useState(false);
   const toast = useToast();
 
@@ -14,6 +20,7 @@ const ConfirmTrade = () => {
         headers: {
           'Content-Type': 'application/json',
         },
+        body: JSON.stringify({ tradeKey, address }),
       });
 
       if (!response.ok) {

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { VStack, Heading, Input, Button, useToast } from '@chakra-ui/react';
-
+import { useRouter } from 'next/router';
+import { useSession } from 'next-auth/react';
 const UploadInformation = () => {
   const [loginUrl, setLoginUrl] = useState('');
   const [username, setUsername] = useState('');
@@ -8,6 +9,11 @@ const UploadInformation = () => {
   const [twoFaKey, setTwoFaKey] = useState('');
   const [loading, setLoading] = useState(false);
   const toast = useToast();
+  
+  const router = useRouter();
+  const { tradeKey } = router.query; // 从 URL 查询参数中获取 tradeKey
+  const { data } = useSession();
+  const sellerAddress = data?.user?.address;
 
   const handleUpload = async () => {
     if (!loginUrl || !username || !password || !twoFaKey) {
@@ -29,7 +35,7 @@ const UploadInformation = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ loginUrl, username, password, twoFaKey }),
+        body: JSON.stringify({ tradeKey,sellerAddress,loginUrl, username, password, twoFaKey }),
       });
 
       if (!response.ok) {
