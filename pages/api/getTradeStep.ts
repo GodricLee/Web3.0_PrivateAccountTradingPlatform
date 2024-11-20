@@ -10,9 +10,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   // const address = data?.user?.address;
   const { tradeKey , userAddress } = req.body;
 
-  if (!tradeKey) {
-    return res.status(400).json({ error: 'Trade key is required.' });
+  if (!tradeKey || !userAddress) {
+    return res.status(400).json({ error: 'Trade key and user address are required' });
   }
+  
 
   try {
     // 初始化 Moralis

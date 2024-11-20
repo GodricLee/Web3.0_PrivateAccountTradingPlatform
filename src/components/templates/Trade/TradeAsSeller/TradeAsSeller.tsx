@@ -39,7 +39,7 @@ const TradeAsSeller = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ tradeKey, address }),
+        body: JSON.stringify({ tradeKey, userAddress:address }),
       });
 
       if (!response.ok) {
