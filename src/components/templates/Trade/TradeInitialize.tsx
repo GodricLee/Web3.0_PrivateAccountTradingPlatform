@@ -115,9 +115,9 @@ const TradeInitialize = () => {
             <VStack spacing={4}>
               <Text fontWeight="bold" color="black">Trade Key Accepted</Text>
               <Text color="black">Trade amount: {amount} ETH</Text>
-              <Text color="black">Your role: {role}</Text>
-              <Text color="black">{role} address: {address}</Text>
-              <Text color="black">{opposite_role} address: {walletAddress}</Text>
+              <Text color="black">Your role: {opposite_role}</Text>
+              <Text color="black">{role} address: {walletAddress}</Text>
+              <Text color="black">{opposite_role} address: {address}</Text>
               <Button colorScheme="green" onClick={handleConfirmAndProceed}>
                 Confirm Trade and Proceed
               </Button>
@@ -190,7 +190,8 @@ const TradeInitialize = () => {
       });
 
       if (!backendResponse.ok) {
-        throw new Error('Failed to create trade on the backend');
+        const errorResponse = await backendResponse.json();
+        throw new Error(errorResponse.error || 'Failed to create trade on the backend');
       }
 
       const responseJson = await backendResponse.json();
