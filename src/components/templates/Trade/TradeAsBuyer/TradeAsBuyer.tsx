@@ -41,7 +41,8 @@ const Buyer = () => {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to fetch trade step from server.');
+        const errorResponse = await response.json();
+        throw new Error(errorResponse.error || 'Failed to fetch trade step from server.');
       }
 
       const { step } = await response.json();
