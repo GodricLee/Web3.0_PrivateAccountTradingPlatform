@@ -21,40 +21,30 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const { tradeKey, buyerAddress, sellerAddress, tradeAmount, serviceFee }: TradeRequestBody = req.body;
 
         // Initialize Moralis
-        await Moralis.start({ apiKey: process.env.MORALIS_API_KEY || '' });
-
+        if (!Moralis.Core.isStarted) {
+            await Moralis.start({ apiKey: process.env.MORALIS_API_KEY || '' });
+        }
         // Smart contract details
-        const contractAddress =  process.env.CONTRACT_ADDRESS || ''; // Replace with your deployed contract address
-        const abi = [
-            {
-                inputs: [
-                    { internalType: 'string', name: 'new_key', type: 'string' },
-                    { internalType: 'address', name: 'buyer_address', type: 'address' },
-                    { internalType: 'address', name: 'seller_address', type: 'address' },
-                    { internalType: 'uint256', name: 'trade_amount', type: 'uint256' },
-                ],
-                name: 'createTrade',
-                outputs: [],
-                stateMutability: 'nonpayable',
-                type: 'function',
-            },
-        ];
+        const contractAddress = process.env.CONTRACT_ADDRESS;
+        if (!contractAddress) {
+            throw new Error('CONTRACT_ADDRESS environment variable is not set');
+        }
+        const abi = process.env.CONTRACT_ABI ? JSON.parse(process.env.CONTRACT_ABI) : [];
 
         // Interact with the smart contract
-        const options = {
-            address: contractAddress,
-            functionName: 'createTrade',
-            abi,
-            params: {
-                new_key: tradeKey,
-                buyer_address: buyerAddress,
-                seller_address: sellerAddress,
-                trade_amount: ethers.BigNumber.from(tradeAmount).add(ethers.BigNumber.from(serviceFee)).toString(),
-            },
-        };
+        const provider = new ethers.providers.JsonRpcProvider(process.env.RPC_URL);
+        const signer = new ethers.Wallet(process.env.PRIVATE_KEY || '', provider);
+        const contract = new ethers.Contract(contractAddress, abi, signer);
 
         // Call the smart contract function
-        const transaction = await Moralis.EvmApi.utils.runContractFunction(options);
+        const transaction = await contract.createTrade(
+            tradeKey,
+            buyerAddress,
+            sellerAddress,
+            ethers.BigNumber.from(tradeAmount).add(ethers.BigNumber.from(serviceFee)).toString()
+        );
+
+        await transaction.wait();
 
         return res.status(200).json({ transaction });
     } catch (error: any) {
