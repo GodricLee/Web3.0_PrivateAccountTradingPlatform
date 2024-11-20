@@ -31,7 +31,7 @@ const PasswordChange = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ tradeKey,newPassword,buyerAddress }),
+        body: JSON.stringify({ _tradeKey:tradeKey,newPassword,buyerAddress }),
       });
 
       if (!response.ok) {

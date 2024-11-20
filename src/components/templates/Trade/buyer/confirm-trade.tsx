@@ -20,7 +20,7 @@ const ConfirmTrade = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ tradeKey, address }),
+        body: JSON.stringify({ tradeKey, buyerAddress:address }),
       });
 
       if (!response.ok) {

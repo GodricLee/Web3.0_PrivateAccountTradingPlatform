@@ -17,7 +17,9 @@ const Buyer = () => {
   const router = useRouter();
   const { data } = useSession();
   const address = data?.user?.address;
+
   const handleSubmit = async () => {
+   
     if (!tradeKey) {
       toast({
         title: 'Error',
@@ -39,7 +41,7 @@ const Buyer = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ tradeKey,address }),
+        body: JSON.stringify({ tradeKey,userAddress:address }),
       });
 
       if (!response.ok) {
