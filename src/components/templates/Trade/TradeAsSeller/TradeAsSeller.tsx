@@ -41,13 +41,14 @@ const TradeAsSeller = () => {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to fetch trade step from server.');
+        const errorResponse = await response.json();
+        throw new Error(errorResponse.error || 'Failed to fetch trade step from server.');
       }
 
       const { step } = await response.json();
-
+      const stepInt = parseInt(step, 10);
       // 根据返回的 step 值进行页面跳转
-      switch (step) {
+      switch (stepInt) {
         case 0:
           router.push('/seller/upload-information'); // 跳转到上传账户信息页面
           break;
@@ -84,7 +85,7 @@ const TradeAsSeller = () => {
         default:
           toast({
             title: 'Invalid Step',
-            description: `Step ${step} is not recognized.`,
+            description: `Step ${stepInt} is not recognized.`,
             status: 'error',
             duration: 3000,
             isClosable: true,

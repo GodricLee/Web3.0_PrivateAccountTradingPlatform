@@ -46,9 +46,9 @@ const Buyer = () => {
       }
 
       const { step } = await response.json();
-
+      const stepInt = parseInt(step, 10);
       // 根据返回的 step 值进行页面跳转
-      switch (step) {
+      switch (stepInt) {
         case 0:
           router.push('/buyer/fund-upload'); // 跳转到资金上传页面
           break;
@@ -67,7 +67,7 @@ const Buyer = () => {
         default:
           toast({
             title: 'Invalid Step',
-            description: `Step ${step} is not recognized.`,
+            description: `Step ${stepInt} is not recognized.`,
             status: 'error',
             duration: 3000,
             isClosable: true,
