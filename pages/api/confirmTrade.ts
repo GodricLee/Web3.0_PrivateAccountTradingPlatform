@@ -27,10 +27,10 @@ export default async function handler(req: ConfirmTradeRequest, res: NextApiResp
         }
 
         // Initialize Moralis
-        await Moralis.start({ apiKey: 'YOUR_MORALIS_API_KEY' });
+        await Moralis.start({ apiKey: process.env.MORALIS_API_KEY || '' });
 
         // Smart contract configuration
-        const contractAddress = '0xYourContractAddress'; // Replace with your contract address
+        const contractAddress = process.env.CONTRACT_ADDRESS || ''; 
         const abi = [
             {
                 inputs: [

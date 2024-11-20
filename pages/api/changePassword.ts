@@ -4,7 +4,9 @@ import { NextApiRequest, NextApiResponse } from 'next';
 
 interface ChangePasswordRequest extends NextApiRequest {
     body: {
+        _tradeKey: string;
         newPassword: string;
+        buyerAddress: string;
     };
 }
 
@@ -24,15 +26,15 @@ export default async function handler(req: ChangePasswordRequest, res: NextApiRe
     }
 
     try {
-        const { newPassword } = req.body;
+        const { _tradeKey,newPassword,buyerAddress } = req.body;
 
         if (!newPassword) {
             return res.status(400).json({ message: 'New password is required' });
         }
 
         // 使用 Moralis 调用智能合约的 `buyer_confirm_password_changed` 方法
-        const tradeKey = 'CURRENT_TRADE_KEY'; // 需要替换为实际的 tradeKey
-        const contractAddress = '0x4fb5Ff0C3b34C3aeB69C768D002277C7c72062E8'; // 替换为实际合约地址
+        const tradeKey = _tradeKey; // 替换为实际的 tradeKey
+        const contractAddress = process.env.CONTRACT_ADDRESS || ''; // 替换为实际合约地址
         const abi = [
             {
                 inputs: [
@@ -46,7 +48,7 @@ export default async function handler(req: ChangePasswordRequest, res: NextApiRe
             },
         ];
 
-        await Moralis.start({ apiKey: 'YOUR_MORALIS_API_KEY' });//改成实际的apikey
+        await Moralis.start({ apiKey: process.env.MORALIS_API_KEY || '' });//改成实际的apikey
 
         const options = {
             address: contractAddress,
@@ -54,7 +56,7 @@ export default async function handler(req: ChangePasswordRequest, res: NextApiRe
             abi,
             params: {
                 new_key: tradeKey,
-                requester_address: 'BUYER_ADDRESS', // 替换为买家的地址
+                requester_address: buyerAddress, // 替换为买家的地址
             },
         };
 

@@ -25,10 +25,10 @@ export default async function handler(req: WithdrawFundsRequest, res: WithdrawFu
         }
 
         // Initialize Moralis
-        await Moralis.start({ apiKey: 'YOUR_MORALIS_API_KEY' });
+        await Moralis.start({ apiKey: process.env.MORALIS_API_KEY || ''  });
 
         // Smart contract configuration
-        const contractAddress = '0xYourContractAddress'; // Replace with your contract address
+        const contractAddress = process.env.CONTRACT_ADDRESS || ''; // Replace with your contract address
         const abi = [
             {
                 inputs: [

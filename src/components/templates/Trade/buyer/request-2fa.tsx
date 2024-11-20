@@ -1,10 +1,15 @@
 import { VStack, Heading, Button, useToast } from '@chakra-ui/react';
 import { useState } from 'react';
-
+import { useRouter } from 'next/router';
+import { useSession } from 'next-auth/react';
 const Request2FA = () => {
   const [loading, setLoading] = useState(false);
   const [twoFaCode, setTwoFaCode] = useState('');
   const toast = useToast();
+  const router = useRouter();
+  const { tradeKey } = router.query; // 从 URL 查询参数中获取 tradeKey
+  const { data } = useSession();
+  const buyerAddress = data?.user?.address;
 
   const handleRequest2FA = async () => {
     try {
@@ -15,6 +20,7 @@ const Request2FA = () => {
         headers: {
           'Content-Type': 'application/json',
         },
+        body: JSON.stringify({ tradeKey, buyerAddress }),
       });
 
       if (!response.ok) {
