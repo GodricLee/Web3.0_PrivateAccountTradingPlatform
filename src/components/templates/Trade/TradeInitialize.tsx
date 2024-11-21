@@ -151,25 +151,11 @@ const TradeInitialize = () => {
       if (!walletAddress || !amount || !role || !seed) {
         throw new Error('Invalid trade key format');
       }
-
+      // 判断当前用户角色，并动态设置 buyerAddress 和 sellerAddress
+      const buyerAddress = userRole === 'Buyer' ? address : walletAddress;
+      const sellerAddress = userRole === 'Seller' ? address : walletAddress;
       // Get the service fee from the backend
-      const feeResponse = await fetch('/api/getServiceFee', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ tradeAmount: amount }),
-      });
-
-      if (!feeResponse.ok) {
-        throw new Error('Failed to fetch service fee');
-      }
-
-      const { serviceFee } = await feeResponse.json();
-      if (!serviceFee) {
-        throw new Error('Service fee not provided by backend');
-      }
-
+      const serviceFee = await fetchServiceFee(amount);
       // Calculate total amount including service fee
       const tradeAmount_ = ethers.utils.parseUnits(amount, 'ether'); // Convert amount to Wei
       const totalAmount = tradeAmount_.add(ethers.BigNumber.from(serviceFee)); // Add service fee
@@ -182,8 +168,8 @@ const TradeInitialize = () => {
         },
         body: JSON.stringify({
           tradeKey,
-          buyerAddress: address,
-          sellerAddress: walletAddress,
+          buyerAddress,
+          sellerAddress,
           tradeAmount: tradeAmount_.toString(),
           serviceFee: serviceFee.toString(),
         }),
@@ -216,7 +202,27 @@ const TradeInitialize = () => {
     }
 
   }
+  
+  // 获取服务费的函数
+  const fetchServiceFee = async (amount: string) => {
+    const feeResponse = await fetch('/api/getServiceFee', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ tradeAmount: amount }),
+    });
 
+    if (!feeResponse.ok) {
+      throw new Error('Failed to fetch service fee');
+    }
+
+    const { serviceFee } = await feeResponse.json();
+    if (!serviceFee) {
+      throw new Error('Service fee not provided by backend');
+    }
+    return serviceFee;
+  };
 
   return (
     <VStack w={'full'} align="center" spacing={6} padding={6}>
