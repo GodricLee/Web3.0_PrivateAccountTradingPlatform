@@ -36,42 +36,29 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             throw new Error('Invalid or missing contract ABI');
         }
         // // Interact with the smart contract
-        // const provider = new ethers.providers.JsonRpcProvider(process.env.RPC_URL);
-        // const signer = new ethers.Wallet(process.env.PRIVATE_KEY || '', provider);
-        // const contract = new ethers.Contract(contractAddress, abi, signer);
+        const provider = new ethers.providers.JsonRpcProvider(process.env.RPC_URL);
+        const signer = new ethers.Wallet(process.env.PRIVATE_KEY || '', provider);
+        const contract = new ethers.Contract(contractAddress, abi, signer);
+        const parsedTradeAmount = ethers.utils.parseUnits(tradeAmount, 'ether');
 
-        // // Call the smart contract function
-        // const transaction = await contract.createTrade(
-        //     tradeKey,
-        //     buyerAddress,
-        //     sellerAddress,
-        //     ethers.BigNumber.from(tradeAmount).add(ethers.BigNumber.from(serviceFee)).toString()
-        // );
+        const tx = await contract.createTrade(
+            tradeKey,
+            buyerAddress,
+            sellerAddress,
+            tradeAmount
+        );
 
-        // await transaction.wait();
+        const receipt = await tx.wait();
 
-        // Calculate total trade amount including service fee
-        const totalAmount = (BigInt(tradeAmount) + BigInt(serviceFee)).toString();
+        return res.status(200).json({ transactionHash: receipt.transactionHash });
 
-        // Call the `createTrade` method on the smart contract using Moralis
-        const options = {
-            address: contractAddress,
-            functionName: 'createTrade',
-            abi,
-            params: {
-                new_key: tradeKey,
-                buyer_address: buyerAddress,
-                seller_address: sellerAddress,
-                trade_amount: totalAmount,
-            },
-        };
-
-        // Execute the function
-        const transaction = await Moralis.EvmApi.utils.runContractFunction(options);
-
-
-        return res.status(200).json({ transaction });
     } catch (error: any) {
-        return res.status(500).json({ message: 'Failed to create trade', error: error.message });
+        
+        return res.status(500).json({ message: error.message });
     }
+    // // Return a success message along with the transaction hash
+    // res.status(200).json({
+    //     message: 'Trade created successfully',
+    //     transactionHash: receipt.transactionHash,
+    // });
 }
