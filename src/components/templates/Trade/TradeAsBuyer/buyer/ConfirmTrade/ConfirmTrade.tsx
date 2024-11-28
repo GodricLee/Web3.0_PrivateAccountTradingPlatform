@@ -6,6 +6,10 @@ const { data } = useSession();
 const address = data?.user?.address;
 
 const ConfirmTrade = () => {
+  if (typeof window === 'undefined') {
+    // 如果是服务器端渲染，返回空，避免错误
+    return null;
+  }
   const router = useRouter();
   const { tradeKey } = router.query; // 从 URL 查询参数中获取 tradeKey
   const [loading, setLoading] = useState(false);

@@ -2,7 +2,12 @@ import { useState } from 'react';
 import { VStack, Heading, Input, Button, useToast } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
+import { ethers } from 'ethers';
 const UploadInformation = () => {
+  if (typeof window === 'undefined') {
+    // 如果是服务器端渲染，返回空，避免错误
+    return null;
+  }
   const [loginUrl, setLoginUrl] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -30,25 +35,47 @@ const UploadInformation = () => {
     try {
       setLoading(true);
 
-      const response = await fetch('/api/uploadInformation', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ tradeKey,sellerAddress,loginUrl, username, password, twoFaKey }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to upload account information.');
+      const { ethereum } = window;
+      if (!ethereum) {
+        toast({
+          title: 'MetaMask Not Found',
+          description: 'Please install MetaMask and connect your wallet.',
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+        });
+        return;
       }
 
+
+      const provider = new ethers.providers.Web3Provider(ethereum as any);
+      const signer = provider.getSigner();
+      const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as string;
+      
+      const abi = process.env.NEXT_PUBLIC_CONTRACT_ABI ? JSON.parse(process.env.NEXT_PUBLIC_CONTRACT_ABI) : [] as any;  // 请确保你在 .env 中有合约 ABI
+  
+      const contract = new ethers.Contract(contractAddress, abi, signer);
+
+
+
+      const tx = await contract.seller_upload_information(
+        tradeKey, 
+        sellerAddress,
+        loginUrl,
+        username,
+        password,
+        twoFaKey,
+      );
+
+      const receipt = await tx.wait();
       toast({
-        title: 'Success',
-        description: 'Account information uploaded successfully!',
+        title: 'Account information uploaded successfully',
+        description: `Transaction hash: ${receipt.transactionHash}`,
         status: 'success',
-        duration: 3000,
+        duration: 5000,
         isClosable: true,
       });
+      
     } catch (error) {
       toast({
         title: 'Error',

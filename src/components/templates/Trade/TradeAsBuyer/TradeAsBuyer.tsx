@@ -54,19 +54,19 @@ const Buyer = () => {
       // 根据返回的 step 值进行页面跳转
       switch (stepInt) {
         case 0:
-          router.push(`/buyer/fund-upload?tradeKey=${tradeKey}`); // 跳转到资金上传页面
+          router.push(`/trade/buyer/FundUpload?tradeKey=${tradeKey}`); // 跳转到资金上传页面
           break;
         case 1:
-          router.push(`/buyer/request-2fa?tradeKey=${tradeKey}`); // 跳转到 2FA 验证页面
+          router.push(`/trade/buyer/Request2fa?tradeKey=${tradeKey}`); // 跳转到 2FA 验证页面
           break;
         case 2:
-          router.push(`/buyer/confirm-trade?tradeKey=${tradeKey}`); // 跳转到交易确认页面
+          router.push(`/trade/buyer/ConfirmTrade?tradeKey=${tradeKey}`); // 跳转到交易确认页面
           break;
         case 3:
-          router.push(`/buyer/password-change?tradeKey=${tradeKey}`); // 跳转到密码修改页面
+          router.push(`/trade/buyer/PasswordChange?tradeKey=${tradeKey}`); // 跳转到密码修改页面
           break;
         case 4:
-          router.push(`/buyer/trade-complete?tradeKey=${tradeKey}`); // 跳转到交易完成页面
+          router.push(`/trade/buyer/TradeComplete?tradeKey=${tradeKey}`); // 跳转到交易完成页面
           break;
         default:
           toast({
@@ -94,11 +94,11 @@ const Buyer = () => {
 
   return (
     <VStack spacing={6} padding={6} align="center">
-      <Heading size="lg">Buyer Trade Step Check</Heading>
+      <Heading size="lg">Buyer Trade Entry</Heading>
       <Box w="full" maxW="md" p={4} borderWidth={1} borderRadius="md" boxShadow="md">
-        <Text mb={4}>Enter the trade key to check the current step of the trade:</Text>
+        <Text mb={4}>Input the trade key to enter your ongoing trade:</Text>
         <Input
-          placeholder="Enter trade key"
+          placeholder="Input trade key"
           value={tradeKey}
           onChange={(e) => setTradeKey(e.target.value)}
           mb={4}
@@ -109,7 +109,7 @@ const Buyer = () => {
           isLoading={loading}
           w="full"
         >
-          Check Trade Step
+          Enter Your Ongoing Trade
         </Button>
       </Box>
     </VStack>

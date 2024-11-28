@@ -3,12 +3,17 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
 
-const router = useRouter();
+
+const WithdrawFunds = () => {
+  if (typeof window === 'undefined') {
+    // 如果是服务器端渲染，返回空，避免错误
+    return null;
+  }
+  const router = useRouter();
 const { tradeKey } = router.query; // 从 URL 查询参数中获取 tradeKey
 const { data } = useSession();
 const sellerAddress = data?.user?.address;
 
-const WithdrawFunds = () => {
   const [loading, setLoading] = useState(false);
   const toast = useToast();
 

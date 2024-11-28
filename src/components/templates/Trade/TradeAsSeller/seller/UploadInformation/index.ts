@@ -1,0 +1,1 @@
+export { default as UploadInformation } from './UploadInformation';

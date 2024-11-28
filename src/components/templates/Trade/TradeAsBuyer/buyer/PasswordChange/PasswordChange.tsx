@@ -3,6 +3,10 @@ import { VStack, Heading, Input, Button, useToast } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
 const PasswordChange = () => {
+  if (typeof window === 'undefined') {
+    // 如果是服务器端渲染，返回空，避免错误
+    return null;
+  }
   const [newPassword, setNewPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const toast = useToast();
