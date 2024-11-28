@@ -1,9 +1,10 @@
 // pages/api/getServiceFee.ts
+import Moralis from 'moralis';
 import { ethers } from 'ethers';
 import type { NextApiRequest, NextApiResponse } from 'next';
 interface ServiceFeeRequest extends NextApiRequest {
     body: {
-        tradeAmount: string;
+        requester_address: string;
     };
 }
 
@@ -20,16 +21,27 @@ export default async function handler(
     }
 
     try {
-        const { tradeAmount } = req.body;
+        const { requester_address } = req.body;
 
-        // Calculate or retrieve the service fee from the backend logic
-        const serviceFeePercentage = 1; // 这里假设服务费是 1%，这里可以自由调整
-        const serviceFee = (parseFloat(tradeAmount) * serviceFeePercentage) / 100;
+        if (!requester_address) {
+            return res.status(400).json({ message: 'Requester address is required' });
+        }
 
-        // Convert service fee to Wei (backend assumes tradeAmount is in ETH)
-        const serviceFeeInWei = ethers.utils.parseUnits(serviceFee.toString(), 'ether');
+        if (!Moralis.Core.isStarted) {
+            await Moralis.start({ apiKey: process.env.MORALIS_API_KEY || '' });
+          }
+      
+          const response = await Moralis.EvmApi.utils.runContractFunction({
+            chain: '0xa4b1', // 替换为链 ID
+            address: process.env.CONTRACT_ADDRESS || '', // 替换为合约地址
+            functionName: 'get_service_fee',
+            abi: process.env.CONTRACT_ABI ? JSON.parse(process.env.CONTRACT_ABI) : [],
+            // params: {
+            // },
+          });
+          const serviceFee = response.result as string;
+          return res.status(200).json({ serviceFee });
 
-        return res.status(200).json({ serviceFee: serviceFeeInWei.toString() });
     } catch (error: any) {
         return res.status(500).json({ message: 'Failed to calculate service fee', error: error.message });
     }

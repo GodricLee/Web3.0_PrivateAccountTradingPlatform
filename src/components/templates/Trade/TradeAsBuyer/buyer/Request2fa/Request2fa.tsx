@@ -3,6 +3,10 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
 const Request2FA = () => {
+  if (typeof window === 'undefined') {
+    // 如果是服务器端渲染，返回空，避免错误
+    return null;
+  }
   const [loading, setLoading] = useState(false);
   const [twoFaCode, setTwoFaCode] = useState('');
   const toast = useToast();

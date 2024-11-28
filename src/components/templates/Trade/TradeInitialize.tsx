@@ -119,8 +119,8 @@ const TradeInitialize = () => {
               <Text color="black">Your role: {opposite_role}</Text>
               <Text color="black">{role} address: {walletAddress}</Text>
               <Text color="black">{opposite_role} address: {address}</Text>
-              <Button colorScheme="green" onClick={handleConfirmAndProceed}>
-                Confirm Trade and Proceed
+              <Button colorScheme="green" onClick={() => { handleConfirmAndProceed(); onClose(); }}>
+              Confirm Trade and Proceed
               </Button>
             </VStack>
             <Button position="absolute" top={2} right={2} bg="transparent" color="red" onClick={onClose}>
@@ -152,8 +152,8 @@ const TradeInitialize = () => {
         throw new Error('Invalid trade key format');
       }
       // 判断当前用户角色，并动态设置 buyerAddress 和 sellerAddress
-      const buyerAddress = userRole === 'Buyer' ? address : walletAddress;
-      const sellerAddress = userRole === 'Seller' ? address : walletAddress;
+      const sellerAddress = role === 'Buyer' ? address : walletAddress;
+      const buyerAddress = role === 'Seller' ? address : walletAddress;
   
       // 使用 MetaMask 连接并签署交易
       const { ethereum } = window;
@@ -171,13 +171,20 @@ const TradeInitialize = () => {
       const provider = new ethers.providers.Web3Provider(ethereum as any);
       const signer = provider.getSigner();
       const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as string;
-      console.log("Contract Address:", contractAddress);
+      // console.log("Contract Address:", contractAddress);
       const abi = process.env.NEXT_PUBLIC_CONTRACT_ABI ? JSON.parse(process.env.NEXT_PUBLIC_CONTRACT_ABI) : [] as any;  // 请确保你在 .env 中有合约 ABI
   
       const contract = new ethers.Contract(contractAddress, abi, signer);
   
       const tradeAmount_ = ethers.utils.parseUnits(amount, 'ether'); // Convert amount to Wei
-  
+
+      // toast({
+      //   title: 'TEST',
+      //   description: `TradeKey:${tradeKey} buyerAddress:${buyerAddress} sellerAddress:${sellerAddress} tradeAmount:${tradeAmount_}`,
+      //   status: 'success',
+      //   duration: 5000,
+      //   isClosable: true,
+      // });
       // 创建交易
       const tx = await contract.createTrade(
         tradeKey,
@@ -189,7 +196,7 @@ const TradeInitialize = () => {
       // 等待交易确认
       const receipt = await tx.wait();
       toast({
-        title: 'Transaction Success',
+        title: 'Trade created successfully!',
         description: `Transaction hash: ${receipt.transactionHash}`,
         status: 'success',
         duration: 5000,
@@ -216,13 +223,7 @@ const TradeInitialize = () => {
       }
   
       const responseJson = await backendResponse.json();
-      toast({
-        title: 'Trade Created',
-        description: 'The trade has been successfully created.',
-        status: 'success',
-        duration: 5000,
-        isClosable: true,
-      });
+
     } catch (error) {
       toast({
         position: 'top',
@@ -242,26 +243,7 @@ const TradeInitialize = () => {
   }
   
   
-  // 获取服务费的函数
-  const fetchServiceFee = async (amount: string) => {
-    const feeResponse = await fetch('/api/getServiceFee', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ tradeAmount: amount }),
-    });
 
-    if (!feeResponse.ok) {
-      throw new Error('Failed to fetch service fee');
-    }
-
-    const { serviceFee } = await feeResponse.json();
-    if (!serviceFee) {
-      throw new Error('Service fee not provided by backend');
-    }
-    return serviceFee;
-  };
 
   return (
     <VStack w={'full'} align="center" spacing={6} padding={6}>

@@ -52,7 +52,7 @@ const TradeAsSeller = () => {
       // 根据返回的 step 值进行页面跳转
       switch (stepInt) {
         case 0:
-          router.push(`/seller/upload-information?tradeKey=${tradeKey} `); // 跳转到上传账户信息页面
+          router.push(`/trade/seller/UploadInformation?tradeKey=${tradeKey} `); // 跳转到上传账户信息页面
           break;
         case 1:
           toast({
@@ -82,7 +82,7 @@ const TradeAsSeller = () => {
           });
           break;
         case 4:
-          router.push(`/seller/withdraw-funds?tradeKey=${tradeKey}`); // 跳转到提现资金页面
+          router.push(`/trade/seller/WithdrawFunds?tradeKey=${tradeKey}`); // 跳转到提现资金页面
           break;
         default:
           toast({
@@ -110,11 +110,11 @@ const TradeAsSeller = () => {
 
   return (
     <VStack spacing={6} padding={6} align="center">
-      <Heading size="lg">Seller Trade Step Check</Heading>
+      <Heading size="lg">Seller Trade Entry</Heading>
       <Box w="full" maxW="md" p={4} borderWidth={1} borderRadius="md" boxShadow="md">
-        <Text mb={4}>Enter the trade key to check the current step of the trade:</Text>
+        <Text mb={4}>Input the trade key to enter your ongoing trade:</Text>
         <Input
-          placeholder="Enter trade key"
+          placeholder="Input trade key"
           value={tradeKey}
           onChange={(e) => setTradeKey(e.target.value)}
           mb={4}
@@ -125,7 +125,7 @@ const TradeAsSeller = () => {
           isLoading={loading}
           w="full"
         >
-          Check Trade Step
+          Enter Your Ongoing Trade
         </Button>
       </Box>
     </VStack>
