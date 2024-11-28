@@ -16,6 +16,7 @@ import { useNetwork, useAccount } from 'wagmi';
 import Moralis from 'moralis';
 import { ethers } from 'ethers';
 
+
 const TradeInitialize = () => {
   const hoverTrColor = useColorModeValue('gray.100', 'gray.700');
   const { data } = useSession();
@@ -144,7 +145,6 @@ const TradeInitialize = () => {
   };
 
   const handleConfirmAndProceed = async () => {
-
     try {
       // Decode the trade key to get the other party's address and trade details
       const [walletAddress, amount, role, seed] = atob(tradeKey).split(':');
@@ -154,12 +154,48 @@ const TradeInitialize = () => {
       // 判断当前用户角色，并动态设置 buyerAddress 和 sellerAddress
       const buyerAddress = userRole === 'Buyer' ? address : walletAddress;
       const sellerAddress = userRole === 'Seller' ? address : walletAddress;
-      // Get the service fee from the backend
-      const serviceFee = await fetchServiceFee(amount);
-      // Calculate total amount including service fee
+  
+      // 使用 MetaMask 连接并签署交易
+      const { ethereum } = window;
+      if (!ethereum) {
+        toast({
+          title: 'MetaMask Not Found',
+          description: 'Please install MetaMask and connect your wallet.',
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+        });
+        return;
+      }
+  
+      const provider = new ethers.providers.Web3Provider(ethereum as any);
+      const signer = provider.getSigner();
+      const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as string;
+      console.log("Contract Address:", contractAddress);
+      const abi = process.env.NEXT_PUBLIC_CONTRACT_ABI ? JSON.parse(process.env.NEXT_PUBLIC_CONTRACT_ABI) : [] as any;  // 请确保你在 .env 中有合约 ABI
+  
+      const contract = new ethers.Contract(contractAddress, abi, signer);
+  
       const tradeAmount_ = ethers.utils.parseUnits(amount, 'ether'); // Convert amount to Wei
-      const totalAmount = tradeAmount_.add(ethers.BigNumber.from(serviceFee)); // Add service fee
-
+  
+      // 创建交易
+      const tx = await contract.createTrade(
+        tradeKey,
+        buyerAddress,
+        sellerAddress,
+        tradeAmount_
+      );
+  
+      // 等待交易确认
+      const receipt = await tx.wait();
+      toast({
+        title: 'Transaction Success',
+        description: `Transaction hash: ${receipt.transactionHash}`,
+        status: 'success',
+        duration: 5000,
+        isClosable: true,
+      });
+  
       // Send trade data to the backend for smart contract interaction
       const backendResponse = await fetch('/api/createTrade', {
         method: 'POST',
@@ -171,37 +207,40 @@ const TradeInitialize = () => {
           buyerAddress,
           sellerAddress,
           tradeAmount: tradeAmount_.toString(),
-          serviceFee: serviceFee.toString(),
         }),
       });
-
+  
       if (!backendResponse.ok) {
         const errorResponse = await backendResponse.json();
         throw new Error(errorResponse.error || 'Failed to create trade on the backend');
       }
-
+  
       const responseJson = await backendResponse.json();
-
-      // Notify the user of successful trade creation
       toast({
         title: 'Trade Created',
-        description: 'The trade has been successfully created. Please proceed to the next step.',
+        description: 'The trade has been successfully created.',
         status: 'success',
         duration: 5000,
         isClosable: true,
       });
     } catch (error) {
-      // Handle any errors that may occur during the process
       toast({
-        title: 'Error',
-        description: (error as Error).message || 'An unexpected error occurred during the trade process.',
-        status: 'error',
-        duration: 3000,
+        position: 'top',
+        render: ({ onClose }) => (
+          <Box p={6} bg="red.500" color="white" borderRadius="md" maxW="xl">
+            <Text fontWeight="bold">Error</Text>
+            <Text>{(error as Error).message || 'An unexpected error occurred during the trade process.'}</Text>
+            <Button onClick={onClose} mt={4}>
+              Close
+            </Button>
+          </Box>
+        ),
+        duration: null,
         isClosable: true,
       });
     }
-
   }
+  
   
   // 获取服务费的函数
   const fetchServiceFee = async (amount: string) => {
