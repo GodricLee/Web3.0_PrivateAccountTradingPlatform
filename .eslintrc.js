@@ -7,5 +7,8 @@ module.exports = {
     "no-inline-comments": "off",
     complexity: ["error", 20],
     "etc/no-commented-out-code": "off",
+    'no-unreachable': 'warn',
+    'prefer-template': 'off',
+    'no-template-curly-in-string': 'off',
   },
 };
