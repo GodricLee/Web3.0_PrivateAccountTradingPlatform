@@ -46,20 +46,23 @@ export default async function handler(req: RequestBody, res: NextApiResponse<Res
                 requester_address: buyerAddress,
             },
           });
-        const account = JSON.parse(response.raw).result as {
-            login_url: string;
-            account_username: string;
-            account_password: string;
-            two_fa_key: string;
-        };
+          // 检查返回结果
+        console.log("Response from Moralis:", response);
 
+        // 解构数组中的数据
+        const [login_url, account_username, account_password, two_fa_key] = response.result;
+        
+        // 组装成 AccountInfo 对象
         const accountInfo: AccountInfo = {
-            login_url: account.login_url,
-            account_username: account.account_username,
-            account_password: account.account_password,
-            two_fa_key: account.two_fa_key,
+            login_url,
+            account_username,
+            account_password,
+            two_fa_key,
         };
 
+        console.log("Account Info:", accountInfo);
+
+        // 返回数据
         return res.status(200).json({ accountInfo });
         
     } catch (error: any) {
