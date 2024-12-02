@@ -146,7 +146,7 @@ const Request2FA = () => {
       setAccountInfo(data2.accountInfo);
     } catch (error) {
       toast({
-        title: 'what the hell',
+        title: 'Error',
         description: (error as Error).message,
         status: 'error',
         duration: 3000,

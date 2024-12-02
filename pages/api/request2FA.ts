@@ -1,6 +1,7 @@
 import Moralis from 'moralis';
 import { NextApiRequest, NextApiResponse } from 'next';
 import speakeasy from 'speakeasy';
+import { ethers } from 'ethers';
 
 interface RequestBody extends NextApiRequest {
     tradeKey: string;
@@ -43,6 +44,20 @@ export default async function handler(req: RequestBody, res: NextApiResponse<Res
         
         // Generate 2FA code using 2FA key
          const twoFaCode = generate2FaCode(twoFaKey);
+
+         //TO DO: Use ethers.js to call the non-view function set_bool_after_buyer_request_2FA in the smart contract
+
+         //END TO DO
+        const provider = new ethers.providers.JsonRpcProvider(process.env.RPC_URL);
+        const signer = new ethers.Wallet(process.env.PRIVATE_KEY || '', provider);
+
+        const contract = new ethers.Contract(
+            process.env.CONTRACT_ADDRESS || '',
+            process.env.CONTRACT_ABI ? JSON.parse(process.env.CONTRACT_ABI) : [],
+            signer
+        );
+
+        await contract.set_bool_after_buyer_request_2FA(tradeKey, buyerAddress);
 
         return res.status(200).json({ twoFaCode });
     } catch (error: any) {
