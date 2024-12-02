@@ -157,6 +157,33 @@ const Request2FA = () => {
     }
   };
 
+  const handleProceed = async () => {
+    try {
+      const response = await fetch('/api/stepPlus', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ tradeKey, buyerAddress }),
+      });
+
+      if (!response.ok) {
+        const errorResponse = await response.json();
+        throw new Error(errorResponse.error || 'Failed to proceed.');
+      }
+
+      router.push(`/trade/buyer/ConfirmTrade?tradeKey=${tradeKey}`);
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: (error as Error).message,
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  };
+
   return (
     <VStack spacing={6} padding={6}>
       <Heading size="lg">Check Account and Request 2FA</Heading>
@@ -266,6 +293,10 @@ const Request2FA = () => {
           )}
         </ModalContent>
       </Modal>
+
+      <Button colorScheme="green" onClick={handleProceed}>
+        Finished checking account? Click to continue
+      </Button>
     </VStack>
   );
 };
