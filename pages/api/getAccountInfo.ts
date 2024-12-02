@@ -7,9 +7,15 @@ interface RequestBody extends NextApiRequest {
     buyerAddress: string;
 }
 
+interface AccountInfo {
+    login_url: string;
+    account_username: string;
+    account_password: string;
+    two_fa_key: string;
+  }
 
 interface ResponseBody {
-    twoFaCode: string;
+    accountInfo: AccountInfo;
 }
 
 export default async function handler(req: RequestBody, res: NextApiResponse<ResponseBody | { message: string; error?: string }>
@@ -40,13 +46,6 @@ export default async function handler(req: RequestBody, res: NextApiResponse<Res
                 requester_address: buyerAddress,
             },
           });
-        const twoFaKey = response.toString();
-        const twoFaCode = speakeasy.totp({
-            secret: twoFaKey,
-            encoding: 'base32',
-        });
-
-        return res.status(200).json({ twoFaCode });
         
     } catch (error: any) {
         return res.status(500).json({ message: 'Failed to retrieve 2FA key', error: error.message });

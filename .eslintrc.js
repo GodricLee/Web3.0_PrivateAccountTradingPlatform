@@ -10,5 +10,6 @@ module.exports = {
     'no-unreachable': 'warn',
     'prefer-template': 'off',
     'no-template-curly-in-string': 'off',
+    "@typescript-eslint/no-empty-function": "off",
   },
 };
