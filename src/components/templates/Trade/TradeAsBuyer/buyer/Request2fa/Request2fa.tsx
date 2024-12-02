@@ -133,13 +133,7 @@ const Request2FA = () => {
         },
         body: JSON.stringify({ tradeKey, buyerAddress }),
       });
-      toast({
-        title: 'TEST',
-        description: 'fuck',
-        status: 'success',
-        duration: 5000,
-        isClosable: true,
-      });
+      
 
       if (!response.ok) {
         const errorResponse = await response.json();
@@ -147,6 +141,14 @@ const Request2FA = () => {
       }
 
       const data2 = await response.json();
+      
+      toast({
+        title: 'Account Info',
+        description: `accountinfo_login_url: ${data2.accountInfo.login_url} account_username: ${data2.accountInfo.account_username} account_password: ${data2.accountInfo.account_password}`,
+        status: 'success',
+        duration: 5000,
+        isClosable: true,
+      });
       setAccountInfo(data2.accountInfo);
     } catch (error) {
       toast({
@@ -177,7 +179,7 @@ const Request2FA = () => {
           width="100%"
           textAlign="left"
           boxShadow="md"
-          bg="gray.50"
+          bg="#9FCBF1" 
         >
           <Heading size="md" mb={2}>
             Account Information
