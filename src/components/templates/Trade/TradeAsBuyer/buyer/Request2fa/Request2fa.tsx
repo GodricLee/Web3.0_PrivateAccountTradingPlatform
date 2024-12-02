@@ -133,17 +133,24 @@ const Request2FA = () => {
         },
         body: JSON.stringify({ tradeKey, buyerAddress }),
       });
+      toast({
+        title: 'TEST',
+        description: 'fuck',
+        status: 'success',
+        duration: 5000,
+        isClosable: true,
+      });
 
       if (!response.ok) {
         const errorResponse = await response.json();
         throw new Error(errorResponse.error || 'Failed to get account info.');
       }
 
-      const data = await response.json();
-      setAccountInfo(data.accountInfo);
+      const data2 = await response.json();
+      setAccountInfo(data2.accountInfo);
     } catch (error) {
       toast({
-        title: 'Error',
+        title: 'what the hell',
         description: (error as Error).message,
         status: 'error',
         duration: 3000,
