@@ -19,6 +19,7 @@
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
     "@moralisweb3/next": "^2.14.1",
+    "@types/speakeasy": "^2.0.10",
     "@web3uikit/core": "^0.1.5",
     "@web3uikit/icons": "^0.4.1",
     "eslint-config-next": "^13.3.1",
@@ -30,6 +31,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.28.0",
+    "speakeasy": "^2.0.0",
     "wagmi": "^0.9.2"
   },
   "devDependencies": {
