@@ -47,7 +47,7 @@ export default async function handler(req: RequestBody, res: NextApiResponse<Res
             },
           });
           // 检查返回结果
-        console.log("Response from Moralis:", response);
+        // console.log("Response from Moralis:", response);
 
         // 解构数组中的数据
         const [login_url, account_username, account_password, two_fa_key] = response.result;
