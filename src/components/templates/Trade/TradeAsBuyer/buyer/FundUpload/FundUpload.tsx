@@ -54,13 +54,13 @@ const FundUpload = () => {
       const stepAmount = tradeAmount_.mul(serviceFeeAmount);
       const totalAmount = stepAmount.div(ethers.BigNumber.from(100));
 
-      toast({
-        title: 'TEST',
-        description: `tradeAmount:${tradeAmount_} serviceFee:${serviceFee} serviceFeeAmount:${serviceFeeAmount} serviceFeeAmount:${serviceFeeAmount} stepAmount:${stepAmount} totalAmount:${totalAmount}`,
-        status: 'success',
-        duration: 5000,
-        isClosable: true,
-      });
+      // toast({
+      //   title: 'TEST',
+      //   description: `tradeAmount:${tradeAmount_} serviceFee:${serviceFee} serviceFeeAmount:${serviceFeeAmount} serviceFeeAmount:${serviceFeeAmount} stepAmount:${stepAmount} totalAmount:${totalAmount}`,
+      //   status: 'success',
+      //   duration: 5000,
+      //   isClosable: true,
+      // });
 
       const tx = await contract.buyer_upload_fund(tradeKey, buyerAddress, { value: totalAmount });
 

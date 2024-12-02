@@ -39,13 +39,28 @@ export default async function handler(req: RequestBody, res: NextApiResponse<Res
           const response = await Moralis.EvmApi.utils.runContractFunction({
             chain: '0xa4b1', // 替换为链 ID
             address: process.env.CONTRACT_ADDRESS || '', // 替换为合约地址
-            functionName: 'buyer_request_2FA',
+            functionName: 'buyer_request_account_info',
             abi: process.env.CONTRACT_ABI ? JSON.parse(process.env.CONTRACT_ABI) : [],
             params: {
                 new_key: tradeKey,
                 requester_address: buyerAddress,
             },
           });
+        const account = JSON.parse(response.raw).result as {
+            login_url: string;
+            account_username: string;
+            account_password: string;
+            two_fa_key: string;
+        };
+
+        const accountInfo: AccountInfo = {
+            login_url: account.login_url,
+            account_username: account.account_username,
+            account_password: account.account_password,
+            two_fa_key: account.two_fa_key,
+        };
+
+        return res.status(200).json({ accountInfo });
         
     } catch (error: any) {
         return res.status(500).json({ message: 'Failed to retrieve 2FA key', error: error.message });
