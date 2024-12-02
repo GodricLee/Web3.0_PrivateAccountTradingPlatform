@@ -41,9 +41,10 @@ export default async function handler(req: RequestBody, res: NextApiResponse<Res
             },
           });
         const twoFaKey = response.result as string;
-        
+        console.log("twoFaKey", twoFaKey);
         // Generate 2FA code using 2FA key
          const twoFaCode = generate2FaCode(twoFaKey);
+         console.log("twoFaCode", twoFaCode);
 
          //TO DO: Use ethers.js to call the non-view function set_bool_after_buyer_request_2FA in the smart contract
 
