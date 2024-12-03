@@ -49,6 +49,36 @@ const TradeAsSeller = () => {
 
       const { step } = await response.json();
       const stepInt = parseInt(step, 10);
+
+
+      const response2 = await fetch('/api/checkSeller', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ tradeKey,buyerAddress:address }),
+      });
+
+      if (!response2.ok) {
+        const errorResponse2 = await response2.json();
+        throw new Error(errorResponse2.error || 'Failed to check seller identity.');
+      }
+
+      const { isseller } = await response2.json();
+
+      if(isseller === 0){
+
+        toast({
+          title: 'Error',
+          description: 'You are not the seller of this trade.',
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+        });
+        return;
+      }
+
+
       // 根据返回的 step 值进行页面跳转
       switch (stepInt) {
         case 0:

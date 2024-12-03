@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { VStack, Heading, Input, Button, useToast } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
@@ -19,6 +19,30 @@ const UploadInformation = () => {
   const { tradeKey } = router.query; // 从 URL 查询参数中获取 tradeKey
   const { data } = useSession();
   const sellerAddress = data?.user?.address;
+
+  useEffect(() => {
+    const checkUploadedFunds = async () => {
+      try {
+        const response = await fetch('/api/checkUploadedFunds', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ tradeKey, buyerAddress: sellerAddress }),
+        });
+        const data2 = await response.json();
+        const { uploadedaccount } = data2;
+        if (uploadedaccount === 1) {
+          router.push(`/trade/seller/Waiting?tradeKey=${tradeKey} `);
+          
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    checkUploadedFunds();
+  }, []);
 
   const handleUpload = async () => {
     if (!loginUrl || !username || !password || !twoFaKey) {
@@ -72,8 +96,11 @@ const UploadInformation = () => {
         title: 'Account information uploaded successfully',
         description: `Transaction hash: ${receipt.transactionHash}`,
         status: 'success',
-        duration: 5000,
+        duration: null,
         isClosable: true,
+        onCloseComplete: () => {
+          router.push(`/trade/seller/Waiting?tradeKey=${tradeKey}`);
+        },
       });
       
     } catch (error) {

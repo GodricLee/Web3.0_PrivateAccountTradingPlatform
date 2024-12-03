@@ -17,7 +17,7 @@ import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
 import { ethers } from 'ethers';
 
-const Waiting = () => {
+const WaitingSeller = () => {
   if (typeof window === 'undefined') {
     return null;
   }
@@ -33,39 +33,8 @@ const Waiting = () => {
   const [loadingCancel, setLoadingCancel] = useState(false);
   const [autoConfirmed, setAutoConfirmed] = useState<number | null>(null);
 
-  useEffect(() => {
-    const checkAutoConfirmation = async () => {
-      try {
-        const response = await fetch('/api/changePassword', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ tradeKey, buyerAddress: sellerAddress }),
-        });
-        const result = await response.json();
-        if (result.auto_confirmed === 1) {
-          toast({
-            title: '30 minutes have passed, the trade has automatically ended.',
-            status: 'info',
-            duration: 5000,
-            isClosable: true,
-          });
-          router.push(`/trade/seller/WithdrawFunds?tradeKey=${tradeKey}`);
-        } else {
-          setAutoConfirmed(0);
-        }
-      } catch (error) {
-        console.error('Error checking auto confirmation:', error);
-      }
-    };
-
-    checkAutoConfirmation();
-  }, [router, toast, tradeKey, sellerAddress]);
-
-  if (autoConfirmed === null) {
-    return null;
-  }
+  
+  
   const handleCancelTradeClick = () => {
     setIsCancelModalOpen(true);
   };
@@ -124,9 +93,10 @@ const Waiting = () => {
   return (
     <VStack spacing={6} padding={6}>
       <Heading size="lg" textAlign="center">
-        The buyer is currently processing the trade. 
+        The seller is currently uploading the account info.
         <br />
-        Please be patient. You can choose to cancel the trade at any time.
+        Please be patient. 
+        You can choose to cancel the trade at any time.
       </Heading>
       <Button colorScheme="red" onClick={handleCancelTradeClick}>
         Cancel Trade
@@ -165,4 +135,4 @@ const Waiting = () => {
   );
 };
 
-export default Waiting;
+export default WaitingSeller;
