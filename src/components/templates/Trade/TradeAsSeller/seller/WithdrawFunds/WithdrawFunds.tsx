@@ -63,7 +63,7 @@ const WithdrawFunds = () => {
         duration: 3000,
         isClosable: true,
       });
-
+      router.push(`/trade/seller/TradeComplete?tradeKey=${tradeKey}`); // 跳转到交易完成页面
       
     } catch (error) {
       toast({
