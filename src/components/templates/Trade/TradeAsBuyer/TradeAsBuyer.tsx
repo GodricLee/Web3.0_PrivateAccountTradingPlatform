@@ -68,6 +68,12 @@ const Buyer = () => {
         case 4:
           router.push(`/trade/buyer/TradeComplete?tradeKey=${tradeKey}`); // 跳转到交易完成页面
           break;
+        case 5:
+          router.push(`/trade/buyer/TradeCancelled?tradeKey=${tradeKey}`); // 跳转到交易取消页面
+          break;
+        case 10:
+          router.push(`/trade/buyer/TradeComplete?tradeKey=${tradeKey}`); // 跳转到交易完成页面
+          break;
         default:
           toast({
             title: 'Invalid Step',

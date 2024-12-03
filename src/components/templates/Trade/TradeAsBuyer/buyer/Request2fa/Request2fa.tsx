@@ -202,14 +202,14 @@ const Request2FA = () => {
           boxShadow="md"
           bg="#9FCBF1" 
         >
-          <Heading size="md" mb={2}>
+          <Heading size="lg" textAlign="center" color="teal.500">
             Account Information
           </Heading>
           <Divider mb={4} />
           {/* Replace with your account info fields */}
-          <Text><strong>Login URL:</strong> {accountInfo.login_url}</Text>
-          <Text><strong>Username:</strong> {accountInfo.account_username}</Text>
-          <Text><strong>Password:</strong> {accountInfo.account_password}</Text>
+          <Text fontSize="xl" color="teal.500"><strong>Login URL:</strong> {accountInfo.login_url}</Text>
+          <Text fontSize="xl" color="teal.500"><strong>Username:</strong> {accountInfo.account_username}</Text>
+          <Text fontSize="xl" color="teal.500"><strong>Password:</strong> {accountInfo.account_password}</Text>
           {/* ... other account info */}
         </Box>
       )}
