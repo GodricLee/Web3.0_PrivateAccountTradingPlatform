@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   VStack,
   Heading,
@@ -31,7 +31,41 @@ const Waiting = () => {
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
   const [cancelChecked, setCancelChecked] = useState(false);
   const [loadingCancel, setLoadingCancel] = useState(false);
+  const [autoConfirmed, setAutoConfirmed] = useState<number | null>(null);
 
+  useEffect(() => {
+    const checkAutoConfirmation = async () => {
+      try {
+        const response = await fetch('/api/changePassword', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ tradeKey, buyerAddress: sellerAddress }),
+        });
+        const result = await response.json();
+        if (result.auto_confirmed === 1) {
+          toast({
+            title: '30 minutes have passed, the trade has automatically ended.',
+            status: 'info',
+            duration: 5000,
+            isClosable: true,
+          });
+          router.push(`/trade/seller/WithdrawFunds?tradeKey=${tradeKey}`);
+        } else {
+          setAutoConfirmed(0);
+        }
+      } catch (error) {
+        console.error('Error checking auto confirmation:', error);
+      }
+    };
+
+    checkAutoConfirmation();
+  }, [router, toast, tradeKey, sellerAddress]);
+
+  if (autoConfirmed === null) {
+    return null;
+  }
   const handleCancelTradeClick = () => {
     setIsCancelModalOpen(true);
   };

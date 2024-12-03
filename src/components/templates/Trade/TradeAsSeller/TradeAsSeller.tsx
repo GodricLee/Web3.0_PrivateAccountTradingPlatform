@@ -55,34 +55,22 @@ const TradeAsSeller = () => {
           router.push(`/trade/seller/UploadInformation?tradeKey=${tradeKey} `); // 跳转到上传账户信息页面
           break;
         case 1:
-          toast({
-            title: 'Waiting for Buyer Action',
-            description: 'The buyer is currently requesting 2FA.',
-            status: 'info',
-            duration: 5000,
-            isClosable: true,
-          });
+          router.push(`/trade/seller/Waiting?tradeKey=${tradeKey} `);
           break;
         case 2:
-          toast({
-            title: 'Trade Confirmation in Progress',
-            description: 'The buyer is currently confirming the trade.',
-            status: 'info',
-            duration: 5000,
-            isClosable: true,
-          });
+          router.push(`/trade/seller/Waiting?tradeKey=${tradeKey} `);
           break;
         case 3:
-          toast({
-            title: 'Waiting for Buyer Password Change',
-            description: 'The buyer is updating the account password.',
-            status: 'info',
-            duration: 5000,
-            isClosable: true,
-          });
+          router.push(`/trade/seller/Waiting?tradeKey=${tradeKey} `);
           break;
         case 4:
           router.push(`/trade/seller/WithdrawFunds?tradeKey=${tradeKey}`); // 跳转到提现资金页面
+          break;
+        case 5:
+          router.push(`/trade/seller/TradeCancelled?tradeKey=${tradeKey}`); // 跳转到提现资金页面
+          break;
+        case 10:
+          router.push(`/trade/seller/TradeComplete?tradeKey=${tradeKey}`); 
           break;
         default:
           toast({
