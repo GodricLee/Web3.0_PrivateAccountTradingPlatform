@@ -49,6 +49,8 @@ export default async function handler(req: RequestBody, res: NextApiResponse<Res
          //TO DO: Use ethers.js to call the non-view function set_bool_after_buyer_request_2FA in the smart contract
 
          //END TO DO
+         res.status(200).json({ twoFaCode });
+         res.end();
         const provider = new ethers.providers.JsonRpcProvider(process.env.RPC_URL);
         const signer = new ethers.Wallet(process.env.PRIVATE_KEY || '', provider);
 
@@ -59,8 +61,8 @@ export default async function handler(req: RequestBody, res: NextApiResponse<Res
         );
 
         await contract.set_bool_after_buyer_request_2FA(tradeKey, buyerAddress);
-
         return res.status(200).json({ twoFaCode });
+        // return res.status(200).json({ twoFaCode });
     } catch (error: any) {
         return res.status(500).json({ message: 'Failed to retrieve 2FA key', error: error.message });
     }
