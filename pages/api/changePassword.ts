@@ -1,69 +1,65 @@
-// pages/api/changePassword.ts
 import Moralis from 'moralis';
 import { NextApiRequest, NextApiResponse } from 'next';
+import { ethers } from 'ethers';
 
-interface ChangePasswordRequest extends NextApiRequest {
-    body: {
-        _tradeKey: string;
-        newPassword: string;
-        buyerAddress: string;
-    };
+interface RequestBody extends NextApiRequest {
+    tradeKey: string;
+    buyerAddress: string;
 }
 
-interface MoralisOptions {
-    contractAddress: string;
-    functionName: string;
-    abi: any[];
-    params: {
-        new_key: string;
-        requester_address: string;
-    };
+interface ResponseBody {
+    auto_confirmed: number;
 }
 
-export default async function handler(req: ChangePasswordRequest, res: NextApiResponse) {
+export default async function handler(req: RequestBody, res: NextApiResponse<ResponseBody | { message: string; error?: string }>
+
+) {
     if (req.method !== 'POST') {
         return res.status(405).json({ message: 'Method not allowed' });
     }
 
     try {
-        const { _tradeKey,newPassword,buyerAddress } = req.body;
+        const { tradeKey, buyerAddress }: RequestBody = req.body;
 
-        if (!newPassword) {
-            return res.status(400).json({ message: 'New password is required' });
+        if (!tradeKey || !buyerAddress) {
+            return res.status(400).json({ message: 'Missing required parameters' });
         }
 
-        // 使用 Moralis 调用智能合约的 `buyer_confirm_password_changed` 方法
-        const tradeKey = _tradeKey; // 替换为实际的 tradeKey
-        const contractAddress = process.env.CONTRACT_ADDRESS || ''; // 替换为实际合约地址
-        const abi = [
-            {
-                inputs: [
-                    { internalType: 'string', name: 'new_key', type: 'string' },
-                    { internalType: 'address', name: 'requester_address', type: 'address' },
-                ],
-                name: 'buyer_confirm_password_changed',
-                outputs: [],
-                stateMutability: 'nonpayable',
-                type: 'function',
-            },
-        ];
-
-        await Moralis.start({ apiKey: process.env.MORALIS_API_KEY || '' });//改成实际的apikey
-
-        const options = {
-            address: contractAddress,
-            functionName: 'buyer_confirm_password_changed',
-            abi,
+        if (!Moralis.Core.isStarted) {
+            await Moralis.start({ apiKey: process.env.MORALIS_API_KEY || '' });
+          }
+      
+          const response = await Moralis.EvmApi.utils.runContractFunction({
+            chain: '0xa4b1', // 替换为链 ID
+            address: process.env.CONTRACT_ADDRESS || '', // 替换为合约地址
+            functionName: 'is_30_minutes_passed',
+            abi: process.env.CONTRACT_ABI ? JSON.parse(process.env.CONTRACT_ABI) : [],
             params: {
                 new_key: tradeKey,
-                requester_address: buyerAddress, // 替换为买家的地址
+                requester_address: buyerAddress,
             },
-        };
+          });
+        const is_time_passed = response.result as unknown as boolean;
+        console.log("is_time_passed", is_time_passed);
+        const auto_confirmed = is_time_passed ? 1 : 0;
+        if(auto_confirmed === 1){
 
-        const result = await Moralis.EvmApi.utils.runContractFunction(options);
+            //TO DO: Use ethers.js to call the non-view function set_bool_after_buyer_request_2FA in the smart contract
 
-        return res.status(200).json({ message: 'Password changed and trade step updated', result });
+            //END TO DO
+            const provider = new ethers.providers.JsonRpcProvider(process.env.RPC_URL);
+            const signer = new ethers.Wallet(process.env.PRIVATE_KEY || '', provider);
+
+            const contract = new ethers.Contract(
+                process.env.CONTRACT_ADDRESS || '',
+                process.env.CONTRACT_ABI ? JSON.parse(process.env.CONTRACT_ABI) : [],
+                signer
+            );
+
+            await contract.buyer_confirm_password_changed(tradeKey, buyerAddress);
+     }
+        return res.status(200).json({ auto_confirmed });
     } catch (error: any) {
-        return res.status(500).json({ message: 'Failed to change password and update trade step', error: error.message });
+        return res.status(500).json({ message: 'Error fetching auto_confirmed.', error: error.message });
     }
 }
