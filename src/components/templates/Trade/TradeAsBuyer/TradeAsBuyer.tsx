@@ -50,6 +50,34 @@ const Buyer = () => {
       }
 
       const { step } = await response.json();
+
+      const response2 = await fetch('/api/checkBuyer', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ tradeKey,buyerAddress:address }),
+      });
+
+      if (!response2.ok) {
+        const errorResponse2 = await response2.json();
+        throw new Error(errorResponse2.error || 'Failed to check buyer identity.');
+      }
+
+      const { isbuyer } = await response2.json();
+
+      if(isbuyer === 0){
+
+        toast({
+          title: 'Error',
+          description: 'You are not the buyer of this trade.',
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+        });
+        return;
+      }
+
       const stepInt = parseInt(step, 10);
       // 根据返回的 step 值进行页面跳转
       switch (stepInt) {

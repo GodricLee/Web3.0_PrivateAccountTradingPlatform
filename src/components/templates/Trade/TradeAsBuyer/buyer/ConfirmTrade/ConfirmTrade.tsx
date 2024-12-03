@@ -92,6 +92,9 @@ const ConfirmTradePage = () => {
         status: 'success',
         duration: 3000,
         isClosable: true,
+        onCloseComplete: () => {
+          router.push(`/trade/seller/TradeCancelled?tradeKey=${tradeKey}`);
+        },
       });
 
       // Close modal

@@ -1,5 +1,5 @@
 import { VStack, Heading, Text, Button, useToast } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
@@ -10,6 +10,28 @@ const TradeCancelled = () => {
   const { tradeKey } = router.query;
   const { data } = useSession();
   const buyerAddress = data?.user?.address;
+
+  const [uploadedfunds, setUploadedfunds] = useState<number | null>(null);
+
+  useEffect(() => {
+    const checkUploadedFunds = async () => {
+      try {
+        const response = await fetch('/api/checkUploadedFunds', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ tradeKey, buyerAddress }),
+        });
+        const data2 = await response.json();
+        setUploadedfunds(data2.uploadedfunds);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    checkUploadedFunds();
+  }, []);
 
   if (typeof window === 'undefined') {
     return null;
@@ -69,10 +91,14 @@ const TradeCancelled = () => {
         <br />
         If you wish to continue, consider initializing a new trade.
       </Text>
-      <Text fontSize="md">Click the button below to retrieve your funds.</Text>
-      <Button colorScheme="green" onClick={handleWithdrawFunds}>
-        Withdraw Funds
-      </Button>
+      {uploadedfunds === 1 && (
+        <>
+          <Text fontSize="md">Click the button below to retrieve your funds.</Text>
+          <Button colorScheme="green" onClick={handleWithdrawFunds}>
+            Withdraw Funds
+          </Button>
+        </>
+      )}
     </VStack>
   );
 };
