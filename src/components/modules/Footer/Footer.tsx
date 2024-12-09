@@ -4,7 +4,7 @@ import { ExternalLinkIcon } from '@chakra-ui/icons';
 const links = {
   github: 'https://github.com/ethereum-boilerplate/ethereum-boilerplate/',
   forum: 'https://forum.moralis.io/',
-  moralis: 'https://moralis.io/?utm_source=boilerplatehosted&utm_medium=todo&utm_campaign=ethereum-boilerplate',
+  moralis: 'https://t.me/rteR_82',
 };
 
 const Footer = () => {
@@ -13,20 +13,17 @@ const Footer = () => {
       <Text>
         ⭐️ Please star this{' '}
         <Link href={links.github} isExternal alignItems={'center'}>
-          boilerplate <ExternalLinkIcon />
+          project <ExternalLinkIcon />
         </Link>
         , every star makes us very happy!
       </Text>
       <Text>
-        🙋 You have questions? Ask them on the{' '}
-        <Link href={links.forum} isExternal alignItems={'center'}>
-          Moralis forum <ExternalLinkIcon />
-        </Link>
+        🙋 You have questions? Feel free to contact us at lz2300109991@gmail.com.
       </Text>
       <Text>
-        📖 Read more about{' '}
+        📖 Telegram: {' '}
         <Link href={links.moralis} isExternal alignItems={'center'}>
-          Moralis <ExternalLinkIcon />
+        rteR_82 <ExternalLinkIcon />
         </Link>
       </Text>
     </Box>
