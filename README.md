@@ -1,4 +1,4 @@
-# `Web3.0_PrivateAccountTradingPlatform`
+# `Web3.0 Private Account Trading Platform`
 
 > Secure transactions for buyers and sellers, powered by blockchain technology.
 
@@ -18,7 +18,7 @@ If you consider this project helpful - please star this project, every star make
 
 # 🤝 `Need help?`
 
-If you need help with setting up the boilerplate or have other questions - don't hesitate to contact us!
+If you need help with setting up the project or have other questions - don't hesitate to contact us!
 You may see our contact details in the bottom of our website.
 
 # 🚀 `Quick Start`
@@ -39,7 +39,6 @@ yarn install
 
 - `MORALIS_API_KEY`: You can get it [here](https://admin.moralis.io/web3apis).
 - `NEXTAUTH_URL`: Your app address. In the development stage, use http://localhost:3000.
-- `NEXTAUTH_SECRET`: Used for encrypting JWT tokens of users. You can put any value here or generate it on https://generate-secret.now.sh/32.
 
 You might also need to add more environment variables if you want to try on your own.
 
@@ -48,13 +47,13 @@ Example:
 ```
 MORALIS_API_KEY=xxxx
 NEXTAUTH_URL=http://localhost:3000
-NEXTAUTH_SECRET=7197b3e8dbee5ea6274cab37245eec212
 more...
 ```
 
-🚴‍♂️ Run your App:
+🚴‍♂️ Build and Run your App:
 
 ```sh
+yarn build
 yarn start
 ```
 
