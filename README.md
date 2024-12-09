@@ -10,6 +10,8 @@ With features like decentralized fund escrow, real-time trade progress tracking,
 
 Our project is built on top of this [boilerplate](https://github.com/ethereum-boilerplate/ethereum-boilerplate). Thanks to the boilerplate creators for their contribution. Without their efforts, there would be no such project.
 
+Thanks to my course instructor Daming Huang, who sparked my interest in blockchain and provided guidance during the project development process.
+
 Learn more in [this page](http://81.70.13.43:3000/learn)!
 
 # ⭐️ `Star us`
