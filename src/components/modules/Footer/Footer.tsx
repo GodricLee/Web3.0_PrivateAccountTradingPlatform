@@ -2,7 +2,7 @@ import { Box, Link, Text } from '@chakra-ui/react';
 import { ExternalLinkIcon } from '@chakra-ui/icons';
 
 const links = {
-  github: 'https://github.com/ethereum-boilerplate/ethereum-boilerplate/',
+  github: 'https://github.com/GodricLee/Web3.0_PrivateAccountTradingPlatform/',
   forum: 'https://forum.moralis.io/',
   moralis: 'https://t.me/rteR_82',
 };
