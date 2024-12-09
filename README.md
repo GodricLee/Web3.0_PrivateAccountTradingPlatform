@@ -14,6 +14,8 @@ Thanks to my course instructor Daming Huang, who sparked my interest in blockcha
 
 Learn more in [this page](http://81.70.13.43:3000/learn)!
 
+Still confused? View our demo video [here](https://youtu.be/RdKVNA8678s)!
+
 # ⭐️ `Star us`
 
 If you consider this project helpful - please star this project, every star makes us very happy!
