@@ -24,7 +24,7 @@
     "@web3uikit/icons": "^0.4.1",
     "eslint-config-next": "^13.3.1",
     "ethers": "^5.6.9",
-    "framer-motion": "^10",
+    "framer-motion": "^11",
     "moralis": "^2.18.4",
     "next": "^13.3.1",
     "next-auth": "^4.20.1",
