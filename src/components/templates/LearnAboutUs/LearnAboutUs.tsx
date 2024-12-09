@@ -11,6 +11,7 @@ import {
   AlertIcon,
   AlertTitle,
   AlertDescription,
+  AspectRatio,
 } from '@chakra-ui/react';
 import { CheckCircleIcon, LockIcon, InfoIcon } from '@chakra-ui/icons';
 import { useSession } from 'next-auth/react';
@@ -41,6 +42,22 @@ const LearnAboutUs = () => {
           transactions. Users benefit from the security and scalability of Ethereum while enjoying the
           low transaction fees of Layer 2 solutions.
         </Text>
+      </Box>
+
+      {/* YouTube Video */}
+      <Box w="full" maxW="4xl" p={4} borderWidth={1} borderRadius="md" boxShadow="md">
+        <Heading size="lg" mb={4}>
+          Watch Our Platform in Action
+        </Heading>
+        <AspectRatio ratio={16 / 9}>
+          <iframe
+            src="https://www.youtube.com/embed/RdKVNA8678s"
+            title="Demo Video"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          ></iframe>
+        </AspectRatio>
       </Box>
 
       {/* Features */}
