@@ -10,7 +10,7 @@
     "build": "export NODE_OPTIONS='--max-old-space-size=768' && next build",
     "start": "export NODE_OPTIONS='--max-old-space-size=768' && next start",
     "lint": "next lint",
-    "test:e2e": "start-server-and-test dev http://20.189.118.170:3000 test:cypress",
+    "test:e2e": "start-server-and-test dev http://20.189.118.170:80 test:cypress",
     "test:cypress": "cypress run --browser chrome --headless"
   },
   "dependencies": {

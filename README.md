@@ -2,7 +2,7 @@
 
 > Secure transactions for buyers and sellers, powered by blockchain technology.
 
-🚀Website: http://81.70.13.43:3000/
+🚀Website: http://20.189.118.170/
 
 Welcome to our Web3.0 Private Account Trading Platform! Our platform is designed to enable buyers and sellers to securely complete transactions without the need for mutual trust. Powered by blockchain technology, we ensure transparency, security, and fairness for every trade.
 
@@ -12,7 +12,7 @@ Our project is built on top of this [boilerplate](https://github.com/ethereum-bo
 
 Thanks to my course instructor Daming Huang, who sparked my interest in blockchain and provided guidance during the project development process.
 
-Learn more in [this page](http://81.70.13.43:3000/learn)!
+Learn more in [this page](http://20.189.118.170/learn)!
 
 Still confused? View our demo video [here](https://youtu.be/RdKVNA8678s)!
 
