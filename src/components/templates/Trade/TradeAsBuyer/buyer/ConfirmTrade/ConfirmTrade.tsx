@@ -171,7 +171,9 @@ const ConfirmTradePage = () => {
     <VStack spacing={6} padding={6}>
       <Heading size="lg" textAlign="center">
         Having thoroughly reviewed the account, you can now decide whether to confirm the trade or
-        cancel it. Please choose your next action carefully.
+        cancel it. 
+        <br />
+        Please choose your next action carefully.
       </Heading>
       <Button colorScheme="red" onClick={handleCancelTradeClick}>
         Cancel Trade
