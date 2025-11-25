@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { InjectedConnector } from 'wagmi/connectors/injected';
 import { signIn, signOut, useSession } from 'next-auth/react';
-import { useAccount, useConnect, useDisconnect, useSignMessage } from 'wagmi';
+import { useAccount, useConnect, useDisconnect, useSignMessage,useSwitchNetwork  } from 'wagmi';
 import { Button, Text, HStack, Avatar, useToast } from '@chakra-ui/react';
 import { getEllipsisTxt } from 'utils/format';
 import { useAuthRequestChallengeEvm } from '@moralisweb3/next';
@@ -14,6 +14,7 @@ const ConnectButton = () => {
   const toast = useToast();
   const { data } = useSession();
   const { requestChallengeAsync } = useAuthRequestChallengeEvm();
+  const { switchNetworkAsync } = useSwitchNetwork();
 
   const handleAuth = async () => {
     if (isConnected) {
@@ -21,6 +22,14 @@ const ConnectButton = () => {
     }
     try {
       const { account, chain } = await connectAsync();
+
+      if (chain?.id !== 42161) {
+        try {
+          await switchNetworkAsync?.(42161);
+        } catch {
+          throw new Error('请在 MetaMask 中手动切换到 Arbitrum One 网络后重试');
+        }
+      }
 
       const challenge = await requestChallengeAsync({ address: account, chainId: 1 });
 

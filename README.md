@@ -2,7 +2,7 @@
 
 > Secure transactions for buyers and sellers, powered by blockchain technology.
 
-🚀Website: http://20.189.118.170/
+🚀Website: https://trade.retr28.com/
 
 Welcome to our Web3.0 Private Account Trading Platform! Our platform is designed to enable buyers and sellers to securely complete transactions without the need for mutual trust. Powered by blockchain technology, we ensure transparency, security, and fairness for every trade.
 
